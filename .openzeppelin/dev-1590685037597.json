@@ -1,0 +1,60 @@
+{
+  "contracts": {
+    "Counter": {
+      "address": "0xf19A2A01B70519f67ADb309a994Ec8c69A967E8b",
+      "constructorCode": "608060405234801561001057600080fd5b506105d8806100206000396000f3fe",
+      "bodyBytecodeHash": "24211205894506b12b6a9712a066efb75d5613b5a56935d32a2a4ea5a8e4babc",
+      "localBytecodeHash": "d825d30c6ae945e07777aeeb15419e27fff8d2bb6e2a193b9296def05844db24",
+      "deployedBytecodeHash": "d825d30c6ae945e07777aeeb15419e27fff8d2bb6e2a193b9296def05844db24",
+      "types": {
+        "t_string": {
+          "id": "t_string",
+          "kind": "elementary",
+          "label": "string"
+        },
+        "t_mapping<t_string>": {
+          "id": "t_mapping<t_string>",
+          "valueType": "t_string",
+          "label": "mapping(key => string)",
+          "kind": "mapping"
+        }
+      },
+      "storage": [
+        {
+          "contract": "Counter",
+          "path": "contracts/Counter.sol",
+          "label": "PatientToDoctor",
+          "astId": 7,
+          "type": "t_mapping<t_string>",
+          "src": "62:63:0"
+        }
+      ],
+      "warnings": {
+        "hasConstructor": false,
+        "hasSelfDestruct": false,
+        "hasDelegateCall": false,
+        "hasInitialValuesInDeclarations": false,
+        "uninitializedBaseContracts": [],
+        "storageUncheckedVars": [],
+        "storageDiff": []
+      }
+    }
+  },
+  "solidityLibs": {},
+  "proxies": {
+    "medical_eth/Counter": [
+      {
+        "address": "0xCfEB869F69431e42cdB54A4F4f105C19C080A601",
+        "version": "1.0.0",
+        "implementation": "0xf19A2A01B70519f67ADb309a994Ec8c69A967E8b",
+        "admin": "0x5b1869D9A4C187F2EAa108f3062412ecf0526b24",
+        "kind": "Upgradeable"
+      }
+    ]
+  },
+  "manifestVersion": "2.2",
+  "version": "1.0.0",
+  "proxyAdmin": {
+    "address": "0x5b1869D9A4C187F2EAa108f3062412ecf0526b24"
+  }
+}
