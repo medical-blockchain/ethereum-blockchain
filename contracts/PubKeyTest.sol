@@ -1,44 +1,44 @@
 pragma experimental ABIEncoderV2;
 
-contract Counter {
-    mapping(address => mapping(address => string)) PatientToDoctor;
-    mapping(address => address[]) PatientToDoctorPending;
+contract PubKeyTest {
+    mapping(address => mapping(string => string)) PatientToDoctor;
+    mapping(address => string[]) PatientToDoctorPending;
 
-    function Set(address doctorAddress, string memory token)
+    function Set(string memory doctorPublicKey, string memory token)
         public
         returns (bool)
     {
-        PatientToDoctor[msg.sender][doctorAddress] = token;
-        DeletePending(msg.sender, doctorAddress);
+        PatientToDoctor[msg.sender][doctorPublicKey] = token;
+        DeletePending(msg.sender, doctorPublicKey);
         return true;
     }
 
-    function Get(address patientAddress, address doctorAddress)
-        external
+    function Get(address patientAddress, string memory doctorPublicKey)
+        public
         view
         returns (string memory)
     {
-        return PatientToDoctor[patientAddress][doctorAddress];
+        return PatientToDoctor[patientAddress][doctorPublicKey];
     }
 
-    function SetPending(address patientAddress, address doctorAddress) public returns (bool) {
+    function SetPending(address patientAddress, string memory doctorPublicKey) public returns (bool) {
         for (
             uint256 i = 0;
             i < PatientToDoctorPending[patientAddress].length;
             i++
         ) {
-            if (PatientToDoctorPending[patientAddress][i] == doctorAddress) {
+            if (keccak256(abi.encodePacked(PatientToDoctorPending[patientAddress][i])) == keccak256(abi.encodePacked(doctorPublicKey))) {
                 return false;
             }
         }
-        PatientToDoctorPending[patientAddress].push(doctorAddress);
+        PatientToDoctorPending[patientAddress].push(doctorPublicKey);
         return true;
     }
 
     function GetAllPending(address patientAddress)
         public
         view
-        returns (address[] memory)
+        returns (string[] memory)
     {
         return PatientToDoctorPending[patientAddress];
     }
@@ -48,7 +48,7 @@ contract Counter {
         return true;
     }
 
-    function DeletePending(address patientAddress, address doctorAddress)
+    function DeletePending(address patientAddress, string memory doctorPublicKey)
         public
         returns (bool)
     {
@@ -57,7 +57,7 @@ contract Counter {
             i < PatientToDoctorPending[patientAddress].length;
             i++
         ) {
-            if (PatientToDoctorPending[patientAddress][i] == doctorAddress) {
+            if (keccak256(abi.encodePacked(PatientToDoctorPending[patientAddress][i])) == keccak256(abi.encodePacked(doctorPublicKey))) {
                 //TODO faut supprimer le stockage aussi, delete attribue 0, stockage persiste
                 delete PatientToDoctorPending[patientAddress][i];
             }

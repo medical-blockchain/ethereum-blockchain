@@ -1,7 +1,7 @@
 {
   "contracts": {
     "Counter": {
-      "address": "0x4BcF98BDC4aB03C7128979e35Dd74532d10F9aBC",
+      "address": "0x38b50dc17e2c7e4948c79F47684b90c2c6Cab608",
       "constructorCode": "608060405234801561001057600080fd5b50610c66806100206000396000f3fe",
       "bodyBytecodeHash": "bda68cada2a7f56a552765ef727783ca20ba597eb8b242619bfabcbee8663506",
       "localBytecodeHash": "7d474572a51cd963a727ed573c5098e2c0e7d32afe5e692b74219c4b8dd34ccd",
@@ -64,6 +64,64 @@
         "storageUncheckedVars": [],
         "storageDiff": []
       }
+    },
+    "PubKeyTest": {
+      "address": "0x65745be6B501136d1fee5fb1c2060ac4B15A245B",
+      "constructorCode": "608060405234801561001057600080fd5b50610e49806100206000396000f3fe",
+      "bodyBytecodeHash": "78b17f8457ce350991895f18acd98275e9b02454c22696c40ccf95a0c878d42c",
+      "localBytecodeHash": "32be41fa6504d256407f1d6c72c1e9fb0b93efb13eea815f77629ebddf5f4c7e",
+      "deployedBytecodeHash": "32be41fa6504d256407f1d6c72c1e9fb0b93efb13eea815f77629ebddf5f4c7e",
+      "types": {
+        "t_string": {
+          "id": "t_string",
+          "kind": "elementary",
+          "label": "string"
+        },
+        "t_mapping<t_string>": {
+          "id": "t_mapping<t_string>",
+          "valueType": "t_string",
+          "label": "mapping(key => string)",
+          "kind": "mapping"
+        },
+        "t_array:dyn<t_string>": {
+          "id": "t_array:dyn<t_string>",
+          "valueType": "t_string",
+          "length": "dyn",
+          "kind": "array",
+          "label": "string[]"
+        },
+        "t_mapping<t_array:dyn<t_string>>": {
+          "id": "t_mapping<t_array:dyn<t_string>>",
+          "valueType": "t_array:dyn<t_string>",
+          "label": "mapping(key => string[])",
+          "kind": "mapping"
+        }
+      },
+      "storage": [
+        {
+          "contract": "PubKeyTest",
+          "path": "contracts/PubKeyTest.sol",
+          "label": "PatientToDoctor",
+          "astId": 180,
+          "type": "t_mapping<t_string>",
+          "src": "61:61:1"
+        },
+        {
+          "contract": "PubKeyTest",
+          "path": "contracts/PubKeyTest.sol",
+          "label": "PatientToDoctorPending",
+          "astId": 185,
+          "type": "t_mapping<t_array:dyn<t_string>>",
+          "src": "128:51:1"
+        }
+      ],
+      "warnings": {
+        "hasConstructor": false,
+        "hasSelfDestruct": false,
+        "hasDelegateCall": false,
+        "hasInitialValuesInDeclarations": false,
+        "uninitializedBaseContracts": []
+      }
     }
   },
   "solidityLibs": {},
@@ -114,7 +172,16 @@
       {
         "address": "0x748754bf06aD57e1F2971fAa742c11CA75e368e3",
         "version": "1.0.0",
-        "implementation": "0x4BcF98BDC4aB03C7128979e35Dd74532d10F9aBC",
+        "implementation": "0x38b50dc17e2c7e4948c79F47684b90c2c6Cab608",
+        "admin": "0xD5850765719C28b09D21324b40b122c0aBe215C5",
+        "kind": "Upgradeable"
+      }
+    ],
+    "medical_eth/PubKeyTest": [
+      {
+        "address": "0xE5f0E76a7dA37901EeB9A0FcA78d63E4195f3027",
+        "version": "1.0.0",
+        "implementation": "0x65745be6B501136d1fee5fb1c2060ac4B15A245B",
         "admin": "0xD5850765719C28b09D21324b40b122c0aBe215C5",
         "kind": "Upgradeable"
       }
