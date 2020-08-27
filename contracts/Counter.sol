@@ -1,6 +1,10 @@
 pragma experimental ABIEncoderV2;
 
 contract Counter {
+    //use public key instead of doctor address because impoosible to
+    //get public key externally if transaction hasn't been mined
+    //by sending the public key directly the token can be generated
+    //right away instead of waiting fo transaction
     mapping(address => mapping(address => string)) PatientToDoctor;
     mapping(address => address[]) PatientToDoctorPending;
 
@@ -21,7 +25,11 @@ contract Counter {
         return PatientToDoctor[patientAddress][doctorAddress];
     }
 
-    function SetPending(address patientAddress, address doctorAddress) public returns (bool) {
+    //eventually pending logic should be moved to centralized server
+    function SetPending(address patientAddress, address doctorAddress)
+        public
+        returns (bool)
+    {
         for (
             uint256 i = 0;
             i < PatientToDoctorPending[patientAddress].length;
