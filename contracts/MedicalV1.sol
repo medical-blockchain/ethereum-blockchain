@@ -1,16 +1,16 @@
 pragma experimental ABIEncoderV2;
 
-contract PubKeyTest {
-
+contract MedicalV1 {
+    mapping(address => string) PatientAddressToStorj;
     mapping(address => mapping(string => string)) PatientToDoctor;
     mapping(address => string[]) PatientToDoctorPending;
 
     function SetPatientAddressToStorj(
         address PatientAddress,
         string memory encryptedStorjToken
-    ) public returns (bool) {
+    ) public returns (string memory) {
         PatientAddressToStorj[PatientAddress] = encryptedStorjToken;
-        return true;
+        return PatientAddressToStorj[PatientAddress];
     }
 
     function GetPatientAddressToStorj(address PatientAddress)
@@ -92,7 +92,6 @@ contract PubKeyTest {
         }
         return true;
     }
-    mapping(address => string) PatientAddressToStorj;
 }
 
 //local test wallet: 0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1

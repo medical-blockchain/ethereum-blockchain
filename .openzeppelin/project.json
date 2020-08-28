@@ -2,7 +2,8 @@
   "manifestVersion": "2.2",
   "contracts": {
     "Counter": "Counter",
-    "PubKeyTest": "PubKeyTest"
+    "PubKeyTest": "PubKeyTest",
+    "MedicalV1": "MedicalV1"
   },
   "dependencies": {},
   "name": "medical_eth",
