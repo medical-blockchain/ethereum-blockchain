@@ -284,6 +284,11 @@
         "implementation": "0x5C1bb69ADA81De517d85c92E94A75fdC7f0c4Cc7",
         "admin": "0xD5850765719C28b09D21324b40b122c0aBe215C5",
         "kind": "Upgradeable"
+      },
+      {
+        "address": "0x99CB16Eb79daB83a52E4a28Ce1ADA6faC9a7A878",
+        "kind": "NonProxy",
+        "bytecodeHash": "183520788ea5e64ce345e70ada81d5deee233bac49a049e17df17386a30a3fa9"
       }
     ]
   },

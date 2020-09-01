@@ -3,7 +3,8 @@
   "contracts": {
     "Counter": "Counter",
     "PubKeyTest": "PubKeyTest",
-    "MedicalV1": "MedicalV1"
+    "MedicalV1": "MedicalV1",
+    "MedicalV101": "MedicalV101"
   },
   "dependencies": {},
   "name": "medical_eth",
