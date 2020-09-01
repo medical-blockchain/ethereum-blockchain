@@ -105,12 +105,12 @@ contract MedicalV101 {
         return PatientToDoctorsPending[patientAddress];
     }
 
-    function GetPendingPatientsForDoctor(address patientAddress)
+    function GetPendingPatientsForDoctor(string memory doctorPublicKey)
         public
         view
-        returns (string[] memory)
+        returns (address[] memory)
     {
-        return PatientToDoctorsPending[patientAddress];
+        return DoctorToPatientsPending[doctorPublicKey];
     }
 
     function DeletePending(

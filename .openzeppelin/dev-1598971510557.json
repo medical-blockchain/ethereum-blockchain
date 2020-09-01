@@ -1,0 +1,134 @@
+{
+  "contracts": {
+    "MedicalV101": {
+      "address": "0x59d3631c86BbE35EF041872d502F218A39FBa150",
+      "constructorCode": "608060405234801561001057600080fd5b5061185e806100206000396000f3fe",
+      "bodyBytecodeHash": "1854b5e4cc73400e312a2db307f674117219d35c531eea9949ad985c1f938d2d",
+      "localBytecodeHash": "8e0d932dc1c2be791e25f8aa10d8cc7069e66992c93a970c5b34b71bdf6085cf",
+      "deployedBytecodeHash": "8e0d932dc1c2be791e25f8aa10d8cc7069e66992c93a970c5b34b71bdf6085cf",
+      "types": {
+        "t_string": {
+          "id": "t_string",
+          "kind": "elementary",
+          "label": "string"
+        },
+        "t_mapping<t_string>": {
+          "id": "t_mapping<t_string>",
+          "valueType": "t_string",
+          "label": "mapping(key => string)",
+          "kind": "mapping"
+        },
+        "t_array:dyn<t_string>": {
+          "id": "t_array:dyn<t_string>",
+          "valueType": "t_string",
+          "length": "dyn",
+          "kind": "array",
+          "label": "string[]"
+        },
+        "t_mapping<t_array:dyn<t_string>>": {
+          "id": "t_mapping<t_array:dyn<t_string>>",
+          "valueType": "t_array:dyn<t_string>",
+          "label": "mapping(key => string[])",
+          "kind": "mapping"
+        },
+        "t_address": {
+          "id": "t_address",
+          "kind": "elementary",
+          "label": "address"
+        },
+        "t_array:dyn<t_address>": {
+          "id": "t_array:dyn<t_address>",
+          "valueType": "t_address",
+          "length": "dyn",
+          "kind": "array",
+          "label": "address[]"
+        },
+        "t_mapping<t_array:dyn<t_address>>": {
+          "id": "t_mapping<t_array:dyn<t_address>>",
+          "valueType": "t_array:dyn<t_address>",
+          "label": "mapping(key => address[])",
+          "kind": "mapping"
+        }
+      },
+      "storage": [
+        {
+          "contract": "MedicalV101",
+          "path": "contracts/MedicalV1.01.sol",
+          "label": "PatientAddressToStorj",
+          "astId": 178,
+          "type": "t_mapping<t_string>",
+          "src": "62:48:1"
+        },
+        {
+          "contract": "MedicalV101",
+          "path": "contracts/MedicalV1.01.sol",
+          "label": "PatientToDoctorToToken",
+          "astId": 184,
+          "type": "t_mapping<t_string>",
+          "src": "116:68:1"
+        },
+        {
+          "contract": "MedicalV101",
+          "path": "contracts/MedicalV1.01.sol",
+          "label": "PatientToDoctorsPending",
+          "astId": 189,
+          "type": "t_mapping<t_array:dyn<t_string>>",
+          "src": "190:52:1"
+        },
+        {
+          "contract": "MedicalV101",
+          "path": "contracts/MedicalV1.01.sol",
+          "label": "DoctorToPatientsPending",
+          "astId": 194,
+          "type": "t_mapping<t_array:dyn<t_address>>",
+          "src": "248:52:1"
+        },
+        {
+          "contract": "MedicalV101",
+          "path": "contracts/MedicalV1.01.sol",
+          "label": "PatientToDoctors",
+          "astId": 199,
+          "type": "t_mapping<t_array:dyn<t_string>>",
+          "src": "306:45:1"
+        },
+        {
+          "contract": "MedicalV101",
+          "path": "contracts/MedicalV1.01.sol",
+          "label": "DoctorToPatients",
+          "astId": 204,
+          "type": "t_mapping<t_array:dyn<t_address>>",
+          "src": "357:45:1"
+        }
+      ],
+      "warnings": {
+        "hasConstructor": false,
+        "hasSelfDestruct": false,
+        "hasDelegateCall": false,
+        "hasInitialValuesInDeclarations": false,
+        "uninitializedBaseContracts": []
+      }
+    }
+  },
+  "solidityLibs": {},
+  "proxies": {
+    "medical_eth/MedicalV101": [
+      {
+        "address": "0x9561C133DD8580860B6b7E504bC5Aa500f0f06a7",
+        "kind": "NonProxy",
+        "bytecodeHash": "8e0d932dc1c2be791e25f8aa10d8cc7069e66992c93a970c5b34b71bdf6085cf"
+      },
+      {
+        "address": "0x9b1f7F645351AF3631a656421eD2e40f2802E6c0",
+        "version": "1.0.0",
+        "implementation": "0x59d3631c86BbE35EF041872d502F218A39FBa150",
+        "admin": "0x0290FB167208Af455bB137780163b7B7a9a10C16",
+        "kind": "Upgradeable"
+      }
+    ]
+  },
+  "manifestVersion": "2.2",
+  "version": "1.0.0",
+  "proxyAdmin": {
+    "address": "0x0290FB167208Af455bB137780163b7B7a9a10C16"
+  }
+}
