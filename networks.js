@@ -17,5 +17,13 @@ module.exports = {
       provider: () => new HDWalletProvider(process.env.DEV_MNEMONIC, "https://ropsten.infura.io/v3/" + infuraProjectId),
       networkId: 3,       // Ropsten's id
     },
+    prod: {
+      protocol: 'http',
+      host: '52.235.61.13',
+      port: 8545,
+      gas: 5000000,
+      gasPrice: 5e9,
+      networkId: '*',
+    },
   },
 };
