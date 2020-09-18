@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@openzeppelin/cli": "^2.8.2",
-    "@truffle/hdwallet-provider": "^1.0.43",
+    "@truffle/hdwallet-provider": "^1.0.44",
     "fs": "0.0.1-security"
   },
   "devDependencies": {

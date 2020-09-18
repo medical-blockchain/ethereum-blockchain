@@ -1,0 +1,14 @@
+{
+  "contracts": {},
+  "solidityLibs": {},
+  "proxies": {
+    "medical_eth/MedicalV101": [
+      {
+        "address": "0x6212C201D509F1eD7B198c2BC16c00764CA1B818",
+        "kind": "NonProxy",
+        "bytecodeHash": "8e0d932dc1c2be791e25f8aa10d8cc7069e66992c93a970c5b34b71bdf6085cf"
+      }
+    ]
+  },
+  "manifestVersion": "2.2"
+}

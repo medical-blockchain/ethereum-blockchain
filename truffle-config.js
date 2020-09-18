@@ -1,5 +1,6 @@
 const fs = require('fs');
 const HDWalletProvider = require('@truffle/hdwallet-provider');
+const mnemonic = 'unaware arrive typical brisk neutral mean rubber live describe pass link hair sell globe deputy'
 module.exports = {
   networks: {
     development: {
@@ -18,7 +19,7 @@ module.exports = {
     abs_medical_member1_member1: {
       network_id: "*",
       gasPrice: 0,
-      provider: new HDWalletProvider(fs.readFileSync('/home/akaash/mnemonic', 'utf-8'), "https://member1.blockchain.azure.com:3200/skJqTteML8Y6LIQ5y_-a4PF-")
+      provider: new HDWalletProvider(mnemonic, "https://member1.blockchain.azure.com:3200/skJqTteML8Y6LIQ5y_-a4PF-")
     }
   },
   mocha: {},
