@@ -91,24 +91,20 @@ contract MedicalMVP101 {
 
     function CreateEntity(string memory ethPublicKey,string memory encryptedStorjToken, string memory entityType) public {
         if(StringCompare(entityType, patientType)){
-            PatientInfo storage patientInfo = Patients[msg.sender];
-            patientInfo.ethPublicKey = ethPublicKey;
-            patientInfo.encryptedStorjToken = encryptedStorjToken;
+            Patients[msg.sender].ethPublicKey = ethPublicKey;
+            Patients[msg.sender].encryptedStorjToken = encryptedStorjToken;
         }
         if(StringCompare(entityType, institutionType)){
-            InstitutionInfo storage institutionInfo = Institutions[msg.sender];
-            institutionInfo.ethPublicKey = ethPublicKey;
-            institutionInfo.encryptedStorjToken = encryptedStorjToken;
+            Institutions[msg.sender].ethPublicKey = ethPublicKey;
+            Institutions[msg.sender].encryptedStorjToken = encryptedStorjToken;
         }
         if(StringCompare(entityType, functionaryType)){
-            FunctionaryInfo storage functionaryInfo = Functionaries[msg.sender];
-            functionaryInfo.ethPublicKey = ethPublicKey;
-            functionaryInfo.encryptedStorjToken = encryptedStorjToken;
+            Functionaries[msg.sender].ethPublicKey = ethPublicKey;
+            Functionaries[msg.sender].encryptedStorjToken = encryptedStorjToken;
         }
         if(StringCompare(entityType, doctorType)){
-            DoctorInfo storage doctorInfo = Doctors[msg.sender];
-            doctorInfo.ethPublicKey = ethPublicKey;
-            doctorInfo.encryptedStorjToken = encryptedStorjToken;
+            Doctors[msg.sender].ethPublicKey = ethPublicKey;
+            Doctors[msg.sender].encryptedStorjToken = encryptedStorjToken;
         }
 
     }
