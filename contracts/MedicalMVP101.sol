@@ -6,19 +6,35 @@ contract MedicalMVP101 {
     string patientType = "patient";
     string institutionType = "institution";
     string functionaryType = "functionary";
-    string doctorType = "doctor";
 
+    struct PatientAccess {
+        address patientAddress;
+        address grantingEntityAddress;
+        address grantedToEntityAddress;
+        string grantingEntityType;
+        string grantedToEntityType;
+        string grantedEncryptedToken;
+        string permission;
+    }
     struct EntityAddressToToken {
         address entityAddress;
         string token;
         string permission;
     }
-
     struct EntityAddressToType {
         address entityAddress;
         string entityType;
     }
+    struct EntityAddressToPermission {
+        address entityAddress;
+        string entityType;
+        string permission;
+    }
 
+    struct LoopableAddressToPermission {
+        mapping(address => uint256) ArrayIndexMapping;
+        EntityAddressToPermission[] addressToPermissionArray;
+    }
     struct LoopableAddressStringKeyPair {
         mapping(address => uint256) ArrayIndexMapping;
         EntityAddressToToken[] addressStringArray;
@@ -27,38 +43,28 @@ contract MedicalMVP101 {
         mapping(address => uint256) ArrayIndexMapping;
         EntityAddressToType[] addressArray;
     }
+    struct LoopablePatientAccessSearchByInstitution {
+        //outer address granting entity, inner address patient
+        mapping(address => mapping(address => uint)) ArrayIndexMapping;
+        PatientAccess[] patientAccessArray;
+    }
 
-    struct InstitutionInfo {
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByPatientsForThisEntity;
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByThisEntityForFunctionaries;
-        LoopableAddress PendingOutgoing;
-        LoopableAddress PendingIncoming;
-        LoopableAddress entitiesRevokedByThisEntity;
-        LoopableAddress entitiesRejectedByThisEntity;
-        LoopableAddress entiesThatRevokedThisEntity;
-        LoopableAddress entiesThatRejectedThisEntity;
-        string encryptedStorjToken;
-        string ethPublicKey;
-    }
-    struct DoctorInfo {
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByPatientsForThisEntity;
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByThisEntityForDoctors;
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByDoctorsForThisEntity;
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByFunctionariesForThisEntity;
-        LoopableAddress PendingOutgoing;
-        LoopableAddress PendingIncoming;
-        LoopableAddress entitiesRevokedByThisEntity;
-        LoopableAddress entitiesRejectedByThisEntity;
-        LoopableAddress entiesThatRevokedThisEntity;
-        LoopableAddress entiesThatRejectedThisEntity;
-        string encryptedStorjToken;
-        string ethPublicKey;
-    }
     struct PatientInfo {
-        string demographicDataToken;
-        string medicalDataToken;
+        LoopablePatientAccessSearchByInstitution EncryptedAccessCreatedByThisEntityForInstitutions;
         LoopableAddressStringKeyPair EncryptedTokensCreatedByThisEntityForInstitutions;
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByThisEntityForDoctors;
+        LoopableAddress PendingOutgoing;
+        LoopableAddress PendingIncoming;
+        LoopableAddress entitiesRevokedByThisEntity;
+        LoopableAddress entitiesRejectedByThisEntity;
+        LoopableAddress entiesThatRevokedThisEntity;
+        LoopableAddress entiesThatRejectedThisEntity;
+        string encryptedStorjToken;
+        string ethPublicKey;
+    }
+    struct InstitutionInfo {
+        PatientAccess[] NewPatientConfirmationInbox;
+        LoopableAddressStringKeyPair EncryptedTokensCreatedByPatientsForThisEntity;
+        LoopableAddressToPermission FunctionariesApprovedByThisEntity;
         LoopableAddress PendingOutgoing;
         LoopableAddress PendingIncoming;
         LoopableAddress entitiesRevokedByThisEntity;
@@ -69,9 +75,10 @@ contract MedicalMVP101 {
         string ethPublicKey;
     }
     struct FunctionaryInfo {
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByInstitutionsForThisEntity;    
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByThisEntityForDoctors;
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByFunctionariesForThisEntity;
+        PatientAccess[] NewPatientConfirmationInbox;
+        LoopableAddressToPermission InstitutionsThatApprovedThisEntity;    
+        LoopableAddressToPermission FunctionariesThatApprovedThisEntity;
+        LoopableAddressToPermission FunctionariesApprovedByThisEntity;
         LoopableAddress PendingOutgoing;
         LoopableAddress PendingIncoming;
         LoopableAddress entitiesRevokedByThisEntity;
@@ -80,13 +87,11 @@ contract MedicalMVP101 {
         LoopableAddress entiesThatRejectedThisEntity;
         string encryptedStorjToken;
         string ethPublicKey;
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByThisEntityForFunctionaries;
     }
 
     mapping(address => InstitutionInfo) Institutions;
     mapping(address => PatientInfo) Patients;
     mapping(address => FunctionaryInfo) Functionaries;
-    mapping(address => DoctorInfo) Doctors;
     mapping(address => string) AddressToPublicKey;
 
     function CreateEntity(string memory ethPublicKey,string memory encryptedStorjToken, string memory entityType) public {
@@ -102,13 +107,8 @@ contract MedicalMVP101 {
             Functionaries[msg.sender].ethPublicKey = ethPublicKey;
             Functionaries[msg.sender].encryptedStorjToken = encryptedStorjToken;
         }
-        if(StringCompare(entityType, doctorType)){
-            Doctors[msg.sender].ethPublicKey = ethPublicKey;
-            Doctors[msg.sender].encryptedStorjToken = encryptedStorjToken;
-        }
 
     }
-
     function RequestAccess(
         address toEntityAddress, 
         string memory fromEntityType,
@@ -127,7 +127,6 @@ contract MedicalMVP101 {
                 WriteToLoopableAddressList(toEntityAddress,functionaryType, Institutions[msg.sender].PendingOutgoing);
             }
     }
-
     function AcceptAccessRequest(
         address senderEntityAddress, 
         string memory senderEntityType, 
@@ -139,19 +138,67 @@ contract MedicalMVP101 {
             PatientAcceptInstitution(senderEntityAddress,encryptedStorjToken,permission);
         }
         if(StringCompare(senderEntityType, functionaryType) && StringCompare(acceptorEntityType, institutionType)){
-            InstitutionAcceptFunctionary(senderEntityAddress,encryptedStorjToken,permission);
+            InstitutionAcceptFunctionary(senderEntityAddress,permission);
         }
         if(StringCompare(senderEntityType, functionaryType) && StringCompare(acceptorEntityType, functionaryType)){
-            FunctionaryAcceptFunctionary(senderEntityAddress,encryptedStorjToken,permission);
+            FunctionaryAcceptFunctionary(senderEntityAddress,permission);
         }
+    }
+    function InstitutionApplyAccessFromNewPatientInbox() public{
+        PatientAccess[] memory newPatientConfirmationInbox = Institutions[msg.sender].NewPatientConfirmationInbox;
+
+        for (uint i=0; i<newPatientConfirmationInbox.length; i++) {
+            WriteToLoopableAddressStringKeyPairList(
+                newPatientConfirmationInbox[i].patientAddress,
+                newPatientConfirmationInbox[i].grantedEncryptedToken,
+                Institutions[msg.sender].EncryptedTokensCreatedByPatientsForThisEntity, newPatientConfirmationInbox[i].permission
+            );            
+        }
+        delete Institutions[msg.sender].NewPatientConfirmationInbox;
+    }
+    function FunctionaryApplyAccessFromNewPatientInbox() public{
+        PatientAccess[] memory newPatientConfirmationInbox = Functionaries[msg.sender].NewPatientConfirmationInbox;
+
+        for (uint i=0; i<newPatientConfirmationInbox.length; i++) {
+            if(StringCompare(newPatientConfirmationInbox[i].grantingEntityType, institutionType)){
+                WriteToLoopableAddressToPermission(
+                    EntityAddressToPermission(
+                        newPatientConfirmationInbox[i].grantingEntityAddress,
+                        newPatientConfirmationInbox[i].grantedToEntityType,
+                        newPatientConfirmationInbox[i].permission
+                    ), 
+                    Functionaries[msg.sender].InstitutionsThatApprovedThisEntity
+                );  
+            }
+            if(StringCompare(newPatientConfirmationInbox[i].grantingEntityType, functionaryType)){
+                WriteToLoopableAddressToPermission(
+                    EntityAddressToPermission(
+                        newPatientConfirmationInbox[i].grantingEntityAddress,
+                        newPatientConfirmationInbox[i].grantedToEntityType,
+                        newPatientConfirmationInbox[i].permission
+                    ), 
+                    Functionaries[msg.sender].FunctionariesThatApprovedThisEntity
+                );   
+            }          
+        }
+        delete Functionaries[msg.sender].NewPatientConfirmationInbox;
+    }
+    function SendToNewPatientInbox(
+        address patientAddress,
+        address grantingEntityAddress,
+        address grantedToEntityAddress,
+        string memory grantingEntityType,
+        string memory grantedToEntityType,
+        string memory grantedEncryptedToken,
+        string memory permission
+    ) public {
+        PatientAccess memory newPatient = PatientAccess(patientAddress, grantingEntityAddress, grantedToEntityAddress, grantingEntityType, grantedToEntityType,grantedEncryptedToken,permission);
+        Functionaries[grantedToEntityAddress].NewPatientConfirmationInbox.push(newPatient);
     }
 
     function GetEncryptedStorjToken(address entityAddress, string memory entityType) public view returns (string memory) {
         if(StringCompare(entityType, patientType)){
             return Patients[entityAddress].encryptedStorjToken;
-        }
-        if(StringCompare(entityType, doctorType)){
-            return Doctors[entityAddress].encryptedStorjToken;
         }
         if(StringCompare(entityType, institutionType)){
             return Institutions[entityAddress].encryptedStorjToken;
@@ -160,13 +207,9 @@ contract MedicalMVP101 {
             return Functionaries[entityAddress].encryptedStorjToken;
         }
     }
-
     function GetPublicKeyFromAddress(address entityAddress, string memory entityType) public view returns (string memory) {
         if(StringCompare(entityType, patientType)){
             return Patients[entityAddress].ethPublicKey;
-        }
-        if(StringCompare(entityType, doctorType)){
-            return Doctors[entityAddress].ethPublicKey;
         }
         if(StringCompare(entityType, institutionType)){
             return Institutions[entityAddress].ethPublicKey;
@@ -175,7 +218,6 @@ contract MedicalMVP101 {
             return Functionaries[entityAddress].ethPublicKey;
         }
     }
-
     function GetPendingIncomingRequests (
         address entityRequestedAddress,
         string memory entityType
@@ -189,9 +231,21 @@ contract MedicalMVP101 {
         if(StringCompare(entityType, patientType)){
             return Patients[entityRequestedAddress].PendingIncoming.addressArray;
         }
-        if(StringCompare(entityType, doctorType)){
-            return Doctors[entityRequestedAddress].PendingIncoming.addressArray;
-        }
+    }
+    function GetApprovedFunctionariesForInstitution() public view returns (EntityAddressToPermission[] memory){
+        return Institutions[msg.sender].FunctionariesApprovedByThisEntity.addressToPermissionArray;
+    }
+    function GetNewPatientConfirmationInboxForInstitution() public view returns (PatientAccess[] memory){
+        return Institutions[msg.sender].NewPatientConfirmationInbox;
+    }
+    function GetExistingPatientsForInstitution() public view returns (EntityAddressToToken[] memory){
+        return Institutions[msg.sender].EncryptedTokensCreatedByPatientsForThisEntity.addressStringArray;
+    }
+    function GetApprovedFunctionariesForFunctionary() public view returns (EntityAddressToPermission[] memory){
+        return Functionaries[msg.sender].FunctionariesApprovedByThisEntity.addressToPermissionArray;
+    }
+    function GetNewPatientConfirmationInboxForFunctionary() public view returns (PatientAccess[] memory){
+        return Functionaries[msg.sender].NewPatientConfirmationInbox;
     }
 
     function PatientAcceptInstitution(
@@ -199,40 +253,72 @@ contract MedicalMVP101 {
         string memory encryptedStorjToken, 
         string memory permission
     ) private {
-        WriteToLoopableAddressStringKeyPairList(msg.sender,encryptedStorjToken,
-            Institutions[institutionAddress].EncryptedTokensCreatedByPatientsForThisEntity, permission);
-        WriteToLoopableAddressStringKeyPairList(institutionAddress,encryptedStorjToken, 
+        PatientAccess memory newPatientAccess;
+        newPatientAccess = PatientAccess(msg.sender, msg.sender, institutionAddress,  patientType, institutionType, encryptedStorjToken, permission);
+        Institutions[institutionAddress].NewPatientConfirmationInbox.push(newPatientAccess);
+        WriteToLoopableAddressStringKeyPairList(institutionAddress, encryptedStorjToken, 
             Patients[msg.sender].EncryptedTokensCreatedByThisEntityForInstitutions, permission);
         ClearFromLoopableAddressList(msg.sender, Institutions[institutionAddress].PendingOutgoing);
         ClearFromLoopableAddressList(institutionAddress, Patients[msg.sender].PendingIncoming);
     }
     function InstitutionAcceptFunctionary(
         address functionaryAddress,
-        string memory encryptedStorjToken,
         string memory permission
-    ) private {
-        WriteToLoopableAddressStringKeyPairList(msg.sender,encryptedStorjToken,
-            Functionaries[functionaryAddress].EncryptedTokensCreatedByInstitutionsForThisEntity, permission);
-        WriteToLoopableAddressStringKeyPairList(functionaryAddress,encryptedStorjToken,
-            Institutions[msg.sender].EncryptedTokensCreatedByThisEntityForFunctionaries, permission);
-        ClearFromLoopableAddressList(msg.sender, Functionaries[functionaryAddress].PendingOutgoing);
-        ClearFromLoopableAddressList(functionaryAddress, Institutions[msg.sender].PendingIncoming);
+    ) private returns (EntityAddressToToken[] memory) {
+        WriteToLoopableAddressToPermission(
+            EntityAddressToPermission(functionaryAddress, functionaryType, permission),
+            Institutions[msg.sender].FunctionariesApprovedByThisEntity
+        );
+        WriteToLoopableAddressToPermission(
+            EntityAddressToPermission(msg.sender, functionaryType, permission),
+            Functionaries[functionaryAddress].InstitutionsThatApprovedThisEntity
+        );
+        ClearFromLoopableAddressList(functionaryAddress, Functionaries[msg.sender].PendingOutgoing);
+        ClearFromLoopableAddressList(msg.sender, Institutions[msg.sender].PendingIncoming);
+        return Institutions[msg.sender].EncryptedTokensCreatedByPatientsForThisEntity.addressStringArray;
+        //institution client will 
+        // (1) take this array, 
+        // (2) unencrypt, 
+        // (3) create access, 
+        // (4) recrypt, and finally, 
+        // (5) send to functioanry inbox
     }
     function FunctionaryAcceptFunctionary(
         address requestingFunctionaryAddress,
-        string memory encryptedStorjToken,
         string memory permission
     ) private {
-        WriteToLoopableAddressStringKeyPairList(msg.sender,encryptedStorjToken,
-            Functionaries[requestingFunctionaryAddress].EncryptedTokensCreatedByFunctionariesForThisEntity,
-            permission
+        WriteToLoopableAddressToPermission(
+            EntityAddressToPermission(requestingFunctionaryAddress, functionaryType, permission),
+            Functionaries[msg.sender].FunctionariesApprovedByThisEntity
         );
-        WriteToLoopableAddressStringKeyPairList(requestingFunctionaryAddress,encryptedStorjToken,
-            Functionaries[msg.sender].EncryptedTokensCreatedByThisEntityForFunctionaries, permission);
-        ClearFromLoopableAddressList(msg.sender, Functionaries[requestingFunctionaryAddress].PendingOutgoing);
-        ClearFromLoopableAddressList(requestingFunctionaryAddress, Functionaries[msg.sender].PendingIncoming);
+        WriteToLoopableAddressToPermission(
+            EntityAddressToPermission(msg.sender, functionaryType, permission),
+            Functionaries[requestingFunctionaryAddress].FunctionariesApprovedByThisEntity
+        );
+        ClearFromLoopableAddressList(requestingFunctionaryAddress, Functionaries[msg.sender].PendingOutgoing);
+        ClearFromLoopableAddressList(msg.sender, Functionaries[msg.sender].PendingIncoming);
+        //functionary client will have to get it's 
+        // (1) patient token array, 
+        // (2) unencrypt, 
+        // (3) create access, 
+        // (4) recrypt, and finally, 
+        // (5) send to functionary inbox
     }
-
+    
+    function WriteToLoopablePatientAccess(
+        PatientAccess memory patientAccess,
+        LoopablePatientAccessSearchByInstitution storage list
+    ) private{
+        list.patientAccessArray.push(patientAccess);
+        list.ArrayIndexMapping[patientAccess.grantingEntityAddress][patientAccess.patientAddress] = list.patientAccessArray.length;
+    }
+    function WriteToLoopableAddressToPermission(
+        EntityAddressToPermission memory addressToPermission,
+        LoopableAddressToPermission storage list
+    ) private {
+        list.addressToPermissionArray.push(addressToPermission);
+        list.ArrayIndexMapping[addressToPermission.entityAddress] = list.addressToPermissionArray.length;
+    }
     function WriteToLoopableAddressStringKeyPairList(
         address entityAddress,
         string memory token,
@@ -241,8 +327,8 @@ contract MedicalMVP101 {
     ) private {
         EntityAddressToToken memory addressToTokenToAdd;
         addressToTokenToAdd = EntityAddressToToken(entityAddress, token, permission);
-        list.ArrayIndexMapping[entityAddress] = list.addressStringArray.length;
         list.addressStringArray.push(addressToTokenToAdd);
+        list.ArrayIndexMapping[entityAddress] = list.addressStringArray.length;
     }
     function ClearFromLoopableAddressStringKeyPairList(address entityAddress,LoopableAddressStringKeyPair storage list) private {
         delete list.ArrayIndexMapping[entityAddress];
@@ -251,8 +337,8 @@ contract MedicalMVP101 {
         list.addressStringArray[arrayIndexLocation].token = "NA";
     }
     function WriteToLoopableAddressList(address entityAddress,string memory entityType, LoopableAddress storage list) private {
-        list.ArrayIndexMapping[entityAddress] = list.addressArray.length;
         list.addressArray.push(EntityAddressToType(entityAddress, entityType));
+        list.ArrayIndexMapping[entityAddress] = list.addressArray.length;
     }
     function ClearFromLoopableAddressList(address entityAddress,LoopableAddress storage list) private {
         uint256 arrayIndexLocation;
@@ -260,15 +346,6 @@ contract MedicalMVP101 {
         list.addressArray[arrayIndexLocation] = EntityAddressToType(0x0000000000000000000000000000000000000000, 'NA');
     }
 
-    function GetPatientETHPublicKey(address patientAddress) public view returns (string memory) {
-        return Patients[patientAddress].ethPublicKey;
-    }
-    function GetSenderAddress() public view returns (address) {
-        return msg.sender;
-    }
-    function GetAllActiveEncryptedPatientTokensForInstitution() public view returns ( EntityAddressToToken[] memory)  {
-        Institutions[msg.sender].EncryptedTokensCreatedByPatientsForThisEntity.addressStringArray;
-    }
     function StringCompare(string memory value1, string memory value2) private pure returns (bool){
         if(keccak256(abi.encodePacked(value1)) == keccak256(abi.encodePacked(value2))){
             return true;
