@@ -1,10 +1,7 @@
 {
   "manifestVersion": "2.2",
   "contracts": {
-    "Counter": "Counter",
-    "PubKeyTest": "PubKeyTest",
-    "MedicalV1": "MedicalV1",
-    "MedicalV101": "MedicalV101"
+    "MedicalMVP102": "MedicalMVP102"
   },
   "dependencies": {},
   "name": "medical_eth",
@@ -19,8 +16,7 @@
     "typechain": {
       "enabled": false
     },
-    "manager": "openzeppelin",
-    "solcVersion": "0.5.17",
+    "manager": "truffle",
     "artifactsDir": "build/contracts",
     "contractsDir": "contracts"
   },
