@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.0;
 
 import {s} from './StructLib.sol';  // imported 
 
@@ -153,20 +153,20 @@ contract MedicalMVP102 {
             return Patients[entityRequestedAddress].PendingIncoming.addressArray;
         }
     }
-    function GetApprovedFunctionariesForInstitution() public view returns (s.EntityAddressToPermission[] memory){
-        return Institutions[msg.sender].FunctionariesApprovedByThisEntity.addressToPermissionArray;
+    function GetApprovedFunctionariesForInstitution(address entityAddress) public view returns (s.EntityAddressToPermission[] memory){
+        return Institutions[entityAddress].FunctionariesApprovedByThisEntity.addressToPermissionArray;
     }
-    function GetNewPatientConfirmationInboxForInstitution() public view returns (s.PatientAccess[] memory){
-        return Institutions[msg.sender].NewPatientConfirmationInbox;
+    function GetNewPatientConfirmationInboxForInstitution(address entityAddress) public view returns (s.PatientAccess[] memory){
+        return Institutions[entityAddress].NewPatientConfirmationInbox;
     }
-    function GetExistingPatientsForInstitution() public view returns (s.EntityAddressToToken[] memory){
-        return Institutions[msg.sender].EncryptedTokensCreatedByPatientsForThisEntity.addressStringArray;
+    function GetExistingPatientsForInstitution(address entityAddress) public view returns (s.EntityAddressToToken[] memory){
+        return Institutions[entityAddress].EncryptedTokensCreatedByPatientsForThisEntity.addressStringArray;
     }
-    function GetApprovedFunctionariesForFunctionary() public view returns (s.EntityAddressToPermission[] memory){
-        return Functionaries[msg.sender].FunctionariesApprovedByThisEntity.addressToPermissionArray;
+    function GetApprovedFunctionariesForFunctionary(address entityAddress) public view returns (s.EntityAddressToPermission[] memory){
+        return Functionaries[entityAddress].FunctionariesApprovedByThisEntity.addressToPermissionArray;
     }
-    function GetNewPatientConfirmationInboxForFunctionary() public view returns (s.PatientAccess[] memory){
-        return Functionaries[msg.sender].NewPatientConfirmationInbox;
+    function GetNewPatientConfirmationInboxForFunctionary(address entityAddress) public view returns (s.PatientAccess[] memory){
+        return Functionaries[entityAddress].NewPatientConfirmationInbox;
     }
 
     function PatientAcceptInstitution(
@@ -237,15 +237,18 @@ contract MedicalMVP102 {
         list.addressStringArray.push(s.EntityAddressToToken(entityAddress, token, permission));
         list.ArrayIndexMapping[entityAddress] = list.addressStringArray.length-1;
     }
+    function WriteToLoopableAddressList(address entityAddress,string memory entityType, s.LoopableAddress storage list) private {
+        if((list.ArrayIndexMapping[entityAddress]!=uint(0))||
+        ((list.addressArray.length==uint(1))&&(list.addressArray[0].entityAddress==entityAddress))){return;}
+
+        list.addressArray.push(s.EntityAddressToType(entityAddress, entityType));
+        list.ArrayIndexMapping[entityAddress] = list.addressArray.length-1;
+    }
     function ClearFromLoopableAddressStringKeyPairList(address entityAddress,s.LoopableAddressStringKeyPair storage list) private {
         delete list.ArrayIndexMapping[entityAddress];
         uint256 arrayIndexLocation;
         arrayIndexLocation = list.ArrayIndexMapping[entityAddress];
         list.addressStringArray[arrayIndexLocation].token = "NA";
-    }
-    function WriteToLoopableAddressList(address entityAddress,string memory entityType, s.LoopableAddress storage list) private {
-        list.addressArray.push(s.EntityAddressToType(entityAddress, entityType));
-        list.ArrayIndexMapping[entityAddress] = list.addressArray.length-1;
     }
     function ClearFromLoopableAddressList(address entityAddress,s.LoopableAddress storage list) private {
         uint256 arrayIndexLocation;
