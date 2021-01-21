@@ -77,31 +77,7 @@ contract MedicalMVP102 {
         }
         delete Institutions[msg.sender].NewPatientConfirmationInbox;
     }
-    function FunctionaryApplyAccessFromNewPatientInbox() public{
-        s.PatientAccess[] memory newPatientConfirmationInbox = Functionaries[msg.sender].NewPatientConfirmationInbox;
-
-        for (uint i=0; i<newPatientConfirmationInbox.length; i++) {
-            if(StringCompare(newPatientConfirmationInbox[i].grantingEntityType, iType)){
-                WriteToLoopableAddressToPermission(
-                    s.EntityAddressToPermission(
-                        newPatientConfirmationInbox[i].grantingEntityAddress,
-                        newPatientConfirmationInbox[i].grantedToEntityType,
-                        newPatientConfirmationInbox[i].permission
-                    ), 
-                    Functionaries[msg.sender].InstitutionsThatApprovedThisEntity
-                );  
-            }
-            if(StringCompare(newPatientConfirmationInbox[i].grantingEntityType, fType)){
-                WriteToLoopableAddressToPermission(
-                    s.EntityAddressToPermission(
-                        newPatientConfirmationInbox[i].grantingEntityAddress,
-                        newPatientConfirmationInbox[i].grantedToEntityType,
-                        newPatientConfirmationInbox[i].permission
-                    ), 
-                    Functionaries[msg.sender].FunctionariesThatApprovedThisEntity
-                );   
-            }          
-        }
+    function ClearFunctionariesInbox() public{
         delete Functionaries[msg.sender].NewPatientConfirmationInbox;
     }
     function SendToNewPatientInbox(
