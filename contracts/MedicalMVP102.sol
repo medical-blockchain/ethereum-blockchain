@@ -144,6 +144,9 @@ contract MedicalMVP102 {
     function GetNewPatientConfirmationInboxForFunctionary(address entityAddress) public view returns (s.PatientAccess[] memory){
         return Functionaries[entityAddress].NewPatientConfirmationInbox;
     }
+    function GetConfirmedInstitutionsForPatient(address entityAddress) public view returns (s.EntityAddressToToken[] memory){
+        return Patients[entityAddress].EncryptedTokensCreatedByThisEntityForInstitutions.addressStringArray;
+    }
 
     function PatientAcceptInstitution(
         address institutionAddress,
