@@ -84,5 +84,6 @@ library s {
         LoopableAddress entiesThatRejectedThisEntity;
         string encryptedStorjToken;
         string ethPublicKey;
+        address functionaryCopiedFromAddress;
     }
 }

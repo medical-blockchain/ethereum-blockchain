@@ -92,6 +92,11 @@ contract MedicalMVP102 {
         s.PatientAccess memory newPatient = s.PatientAccess(patientAddress, grantingEntityAddress, grantedToEntityAddress, grantingEntityType, grantedToEntityType,grantedEncryptedToken,permission);
         Functionaries[grantedToEntityAddress].NewPatientConfirmationInbox.push(newPatient);
     }
+    function SetFunctionaryCopiedFrom(address grantingAddress, address grantedAddress) public {
+        if(Functionaries[grantedAddress].functionaryCopiedFromAddress==address(0)){
+            Functionaries[grantedAddress].functionaryCopiedFromAddress = grantingAddress;
+        }
+    }
 
     function GetEncryptedStorjToken(address entityAddress, string memory entityType) public view returns (string memory) {
         if(StringCompare(entityType, pType)){
@@ -146,6 +151,9 @@ contract MedicalMVP102 {
     }
     function GetConfirmedInstitutionsForPatient(address entityAddress) public view returns (s.EntityAddressToToken[] memory){
         return Patients[entityAddress].EncryptedTokensCreatedByThisEntityForInstitutions.addressStringArray;
+    }
+    function GetFunctionaryCopiedFrom(address entityAddress) public view returns (address){
+        return Functionaries[entityAddress].functionaryCopiedFromAddress;
     }
 
     function PatientAcceptInstitution(
