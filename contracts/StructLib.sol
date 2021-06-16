@@ -48,7 +48,7 @@ library s {
 
     struct PatientInfo {
         LoopablePatientAccessSearchByInstitution EncryptedAccessCreatedByThisEntityForInstitutions;
-        LoopableAddressStringKeyPair EncryptedTokensCreatedByThisEntityForInstitutions;
+        LoopableAddressStringKeyPair EncryptedTokensCreatedByThisEntityForInstitutions; //encrypted by with this entities pubkey
         LoopableAddress PendingOutgoing;
         LoopableAddress PendingIncoming;
         LoopableAddress entitiesRevokedByThisEntity;

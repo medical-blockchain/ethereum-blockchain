@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma experimental ABIEncoderV2;
 
 import {s} from './StructLib.sol';  // imported 
 
@@ -52,11 +52,12 @@ contract MedicalMVP102 {
         address senderEntityAddress, 
         string memory senderEntityType, 
         string memory acceptorEntityType,
-        string memory encryptedStorjToken,
-        string memory permission
+        string memory encryptedBySenderStorjToken,
+        string memory permission,
+        string memory encryptedByAcceptorStorjToken
     ) public {
         if(StringCompare(senderEntityType, iType) && StringCompare(acceptorEntityType, pType)){
-            PatientAcceptInstitution(senderEntityAddress,encryptedStorjToken,permission);
+            PatientAcceptInstitution(senderEntityAddress,encryptedBySenderStorjToken, permission, encryptedByAcceptorStorjToken);
         }
         if(StringCompare(senderEntityType, fType) && StringCompare(acceptorEntityType, iType)){
             InstitutionAcceptFunctionary(senderEntityAddress,permission);
@@ -158,13 +159,14 @@ contract MedicalMVP102 {
 
     function PatientAcceptInstitution(
         address institutionAddress,
-        string memory encryptedStorjToken, 
-        string memory permission
+        string memory EncryptedBySenderStorjToken,
+        string memory permission,
+        string memory EncryptedByAcceptorStorjToken
     ) private {
         s.PatientAccess memory newPatientAccess;
-        newPatientAccess = s.PatientAccess(msg.sender, msg.sender, institutionAddress,  pType, iType, encryptedStorjToken, permission);
+        newPatientAccess = s.PatientAccess(msg.sender, msg.sender, institutionAddress,  pType, iType, EncryptedBySenderStorjToken, permission);
         Institutions[institutionAddress].NewPatientConfirmationInbox.push(newPatientAccess);
-        WriteToLoopableAddressStringKeyPairList(institutionAddress, encryptedStorjToken, 
+        WriteToLoopableAddressStringKeyPairList(institutionAddress, EncryptedByAcceptorStorjToken, 
             Patients[msg.sender].EncryptedTokensCreatedByThisEntityForInstitutions, permission);
         ClearFromLoopableAddressList(msg.sender, Institutions[institutionAddress].PendingOutgoing);
         ClearFromLoopableAddressList(institutionAddress, Patients[msg.sender].PendingIncoming);
